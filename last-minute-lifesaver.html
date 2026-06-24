@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The Last-Minute Life Saver</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+  :root {
+    --bg: #0a0a0f;
+    --surface: #13131a;
+    --surface2: #1c1c28;
+    --surface3: #252535;
+    --border: #2a2a3d;
+    --accent: #6c63ff;
+    --accent2: #ff6584;
+    --accent3: #43e97b;
+    --accent4: #f7971e;
+    --text: #e8e8f0;
+    --text2: #9090b0;
+    --text3: #5a5a7a;
+    --danger: #ff4757;
+    --warning: #ffa502;
+    --success: #2ed573;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    height: 100vh;
+    display: flex;
+    overflow: hidden;
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 220px;
+    min-width: 220px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    padding: 20px 0;
+  }
+
+  .logo {
+    padding: 0 20px 24px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo-icon {
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; margin-bottom: 8px;
+  }
+
+  .logo h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px; font-weight: 600;
+    color: var(--text); line-height: 1.3;
+  }
+
+  .logo span { color: var(--accent); }
+
+  nav { padding: 16px 12px; flex: 1; }
+
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px; border-radius: var(--radius-sm);
+    cursor: pointer; margin-bottom: 4px;
+    color: var(--text2); font-size: 13px; font-weight: 500;
+    transition: all 0.15s;
+    border: none; background: none; width: 100%; text-align: left;
+  }
+
+  .nav-item:hover { background: var(--surface2); color: var(--text); }
+  .nav-item.active { background: var(--accent); color: white; }
+  .nav-item .icon { font-size: 16px; width: 20px; text-align: center; }
+
+  .nav-badge {
+    margin-left: auto; background: var(--danger);
+    color: white; font-size: 10px; font-weight: 700;
+    padding: 2px 6px; border-radius: 10px;
+  }
+
+  .sidebar-footer {
+    padding: 16px 20px;
+    border-top: 1px solid var(--border);
+    font-size: 11px; color: var(--text3);
+  }
+
+  /* MAIN */
+  .main {
+    flex: 1; overflow-y: auto;
+    display: flex; flex-direction: column;
+  }
+
+  .topbar {
+    padding: 16px 28px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    background: var(--surface);
+    position: sticky; top: 0; z-index: 10;
+  }
+
+  .topbar h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 18px; font-weight: 600;
+  }
+
+  .topbar-right { display: flex; gap: 10px; align-items: center; }
+
+  .date-chip {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 20px; padding: 6px 14px;
+    font-size: 12px; color: var(--text2);
+  }
+
+  .btn {
+    padding: 8px 16px; border-radius: var(--radius-sm);
+    border: none; cursor: pointer; font-size: 13px;
+    font-family: 'Inter', sans-serif; font-weight: 500;
+    transition: all 0.15s;
+  }
+
+  .btn-primary { background: var(--accent); color: white; }
+  .btn-primary:hover { background: #7c74ff; }
+  .btn-danger { background: var(--danger); color: white; }
+  .btn-ghost {
+    background: var(--surface2); color: var(--text2);
+    border: 1px solid var(--border);
+  }
+  .btn-ghost:hover { color: var(--text); background: var(--surface3); }
+  .btn-success { background: var(--success); color: #0a0a0f; }
+
+  .content { padding: 24px 28px; flex: 1; }
+
+  /* TABS */
+  .tab { display: none; }
+  .tab.active { display: block; }
+
+  /* DASHBOARD CARDS */
+  .stats-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .stat-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 18px;
+  }
+
+  .stat-card .label {
+    font-size: 11px; color: var(--text2); text-transform: uppercase;
+    letter-spacing: 0.08em; margin-bottom: 8px;
+  }
+
+  .stat-card .value {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 32px; font-weight: 700;
+  }
+
+  .stat-card .sub {
+    font-size: 11px; margin-top: 4px;
+  }
+
+  .stat-blue .value { color: var(--accent); }
+  .stat-green .value { color: var(--success); }
+  .stat-red .value { color: var(--danger); }
+  .stat-orange .value { color: var(--warning); }
+
+  .dashboard-grid {
+    display: grid; grid-template-columns: 2fr 1fr; gap: 20px;
+  }
+
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 20px;
+  }
+
+  .card-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px; font-weight: 600; margin-bottom: 16px;
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  /* TASK ITEMS */
+  .task-item {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 12px; border-radius: var(--radius-sm);
+    border: 1px solid var(--border); margin-bottom: 8px;
+    background: var(--surface2); transition: all 0.15s;
+  }
+
+  .task-item:hover { border-color: var(--accent); }
+
+  .task-check {
+    width: 18px; height: 18px; border-radius: 50%;
+    border: 2px solid var(--border); cursor: pointer;
+    flex-shrink: 0; margin-top: 2px; transition: all 0.15s;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .task-check:hover { border-color: var(--accent); }
+  .task-check.done { background: var(--success); border-color: var(--success); }
+  .task-check.done::after { content: '✓'; color: #0a0a0f; font-size: 10px; font-weight: 700; }
+
+  .task-info { flex: 1; }
+  .task-title { font-size: 13px; font-weight: 500; margin-bottom: 4px; }
+  .task-title.done { text-decoration: line-through; color: var(--text3); }
+
+  .task-meta { display: flex; gap: 8px; align-items: center; }
+
+  .tag {
+    font-size: 10px; padding: 2px 8px; border-radius: 10px;
+    font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;
+  }
+
+  .tag-high { background: rgba(255,71,87,0.15); color: var(--danger); }
+  .tag-med { background: rgba(255,165,2,0.15); color: var(--warning); }
+  .tag-low { background: rgba(46,213,115,0.15); color: var(--success); }
+  .tag-overdue { background: rgba(255,71,87,0.2); color: var(--danger); border: 1px solid rgba(255,71,87,0.3); }
+
+  .task-due { font-size: 11px; color: var(--text3); }
+  .task-due.overdue { color: var(--danger); }
+
+  .task-actions { display: flex; gap: 6px; }
+  .icon-btn {
+    background: none; border: none; cursor: pointer;
+    color: var(--text3); font-size: 14px; padding: 4px;
+    border-radius: 4px; transition: all 0.15s;
+  }
+  .icon-btn:hover { color: var(--text); background: var(--surface3); }
+
+  /* PRIORITY BADGE */
+  .priority-dot {
+    width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 6px;
+  }
+  .dot-high { background: var(--danger); }
+  .dot-med { background: var(--warning); }
+  .dot-low { background: var(--success); }
+
+  /* HABITS */
+  .habit-item {
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px; border-radius: var(--radius-sm);
+    border: 1px solid var(--border); margin-bottom: 8px;
+    background: var(--surface2);
+  }
+
+  .habit-icon {
+    width: 38px; height: 38px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+
+  .habit-info { flex: 1; }
+  .habit-name { font-size: 13px; font-weight: 500; margin-bottom: 3px; }
+  .habit-streak { font-size: 11px; color: var(--text2); }
+
+  .streak-bar {
+    display: flex; gap: 3px; margin-top: 6px;
+  }
+
+  .streak-day {
+    width: 14px; height: 14px; border-radius: 3px;
+    background: var(--border);
+  }
+  .streak-day.done { background: var(--accent); }
+  .streak-day.today { background: var(--accent3); }
+
+  .habit-check-btn {
+    padding: 6px 14px; border-radius: var(--radius-sm);
+    border: none; cursor: pointer; font-size: 12px; font-weight: 600;
+    transition: all 0.15s;
+  }
+  .habit-check-btn.pending { background: var(--surface3); color: var(--text2); border: 1px solid var(--border); }
+  .habit-check-btn.pending:hover { background: var(--accent); color: white; border-color: var(--accent); }
+  .habit-check-btn.checked { background: rgba(46,213,115,0.15); color: var(--success); border: 1px solid rgba(46,213,115,0.3); }
+
+  /* TIMELINE */
+  .timeline-section { margin-bottom: 24px; }
+  .timeline-label {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--text3); margin-bottom: 10px; font-weight: 600;
+  }
+
+  .timeline-item {
+    display: flex; gap: 14px; align-items: flex-start;
+    padding: 12px 14px; border-radius: var(--radius-sm);
+    margin-bottom: 6px; border-left: 3px solid transparent;
+  }
+
+  .timeline-item.overdue { background: rgba(255,71,87,0.07); border-left-color: var(--danger); }
+  .timeline-item.today { background: rgba(108,99,255,0.07); border-left-color: var(--accent); }
+  .timeline-item.upcoming { background: var(--surface2); border-left-color: var(--border); }
+
+  .timeline-time { font-size: 11px; color: var(--text3); min-width: 60px; padding-top: 2px; }
+  .timeline-content { flex: 1; }
+  .timeline-title { font-size: 13px; font-weight: 500; margin-bottom: 3px; }
+  .timeline-sub { font-size: 11px; color: var(--text2); }
+
+  /* AI CHAT */
+  .ai-layout {
+    display: grid; grid-template-columns: 1fr 320px; gap: 20px;
+    height: calc(100vh - 130px);
+  }
+
+  .chat-container {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); display: flex; flex-direction: column;
+    overflow: hidden;
+  }
+
+  .chat-header {
+    padding: 14px 18px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  .ai-avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+  }
+
+  .ai-status { font-size: 13px; font-weight: 500; }
+  .ai-online { font-size: 11px; color: var(--success); }
+
+  .chat-messages {
+    flex: 1; overflow-y: auto; padding: 16px;
+    display: flex; flex-direction: column; gap: 12px;
+  }
+
+  .msg {
+    max-width: 80%; padding: 10px 14px; border-radius: 12px;
+    font-size: 13px; line-height: 1.5;
+  }
+
+  .msg.user {
+    background: var(--accent); color: white;
+    align-self: flex-end; border-bottom-right-radius: 4px;
+  }
+
+  .msg.ai {
+    background: var(--surface2); color: var(--text);
+    align-self: flex-start; border-bottom-left-radius: 4px;
+    border: 1px solid var(--border);
+  }
+
+  .msg.loading { color: var(--text3); font-style: italic; }
+
+  .chat-input-area {
+    padding: 14px; border-top: 1px solid var(--border);
+    display: flex; gap: 8px;
+  }
+
+  .chat-input {
+    flex: 1; background: var(--surface2); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 10px 14px;
+    color: var(--text); font-size: 13px; font-family: 'Inter', sans-serif;
+    outline: none; transition: border-color 0.15s;
+    resize: none;
+  }
+
+  .chat-input:focus { border-color: var(--accent); }
+  .chat-input::placeholder { color: var(--text3); }
+
+  /* SIDE PANELS */
+  .side-panel {
+    display: flex; flex-direction: column; gap: 16px;
+  }
+
+  .quick-actions { display: flex; flex-direction: column; gap: 8px; }
+
+  .quick-btn {
+    padding: 10px 14px; background: var(--surface2);
+    border: 1px solid var(--border); border-radius: var(--radius-sm);
+    color: var(--text2); font-size: 12px; cursor: pointer;
+    text-align: left; transition: all 0.15s; font-family: 'Inter', sans-serif;
+  }
+
+  .quick-btn:hover { background: var(--accent); color: white; border-color: var(--accent); }
+
+  /* MODAL */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.7); z-index: 100;
+    align-items: center; justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 24px; width: 480px; max-width: 90vw;
+  }
+
+  .modal h3 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 16px; margin-bottom: 20px;
+  }
+
+  .form-group { margin-bottom: 14px; }
+
+  .form-label {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--text2); margin-bottom: 6px; display: block;
+  }
+
+  .form-input, .form-select {
+    width: 100%; background: var(--surface2); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 10px 12px;
+    color: var(--text); font-size: 13px; font-family: 'Inter', sans-serif;
+    outline: none; transition: border-color 0.15s;
+  }
+
+  .form-input:focus, .form-select:focus { border-color: var(--accent); }
+  .form-select option { background: var(--surface2); }
+
+  .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 3px; }
+
+  /* PRODUCTIVITY RING */
+  .prod-ring-wrap { display: flex; align-items: center; gap: 16px; }
+  .ring-labels { display: flex; flex-direction: column; gap: 6px; }
+  .ring-label { font-size: 12px; display: flex; align-items: center; gap: 6px; }
+  .ring-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+  /* EMPTY STATE */
+  .empty { text-align: center; padding: 40px; color: var(--text3); }
+  .empty .empty-icon { font-size: 40px; margin-bottom: 12px; }
+  .empty p { font-size: 13px; }
+
+  /* RECOMMENDATIONS */
+  .rec-item {
+    padding: 12px; background: var(--surface2); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); margin-bottom: 8px;
+    font-size: 12px; line-height: 1.5; color: var(--text2);
+  }
+  .rec-item strong { color: var(--text); display: block; margin-bottom: 4px; }
+
+  /* API KEY BANNER */
+  .api-banner {
+    background: rgba(108,99,255,0.1); border: 1px solid rgba(108,99,255,0.3);
+    border-radius: var(--radius-sm); padding: 12px 16px;
+    font-size: 12px; color: var(--text2); margin-bottom: 16px;
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  .api-input-row { display: flex; gap: 8px; align-items: center; }
+  .api-input-row .form-input { flex: 1; }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="logo">
+    <div class="logo-icon">⚡</div>
+    <h2>Last-Minute<br><span>Life Saver</span></h2>
+  </div>
+  <nav>
+    <button class="nav-item active" onclick="showTab('dashboard')">
+      <span class="icon">🏠</span> Command Center
+    </button>
+    <button class="nav-item" onclick="showTab('tasks')">
+      <span class="icon">✅</span> Tasks
+      <span class="nav-badge" id="overdue-badge">0</span>
+    </button>
+    <button class="nav-item" onclick="showTab('habits')">
+      <span class="icon">🔥</span> Habits
+    </button>
+    <button class="nav-item" onclick="showTab('timeline')">
+      <span class="icon">📅</span> Timeline
+    </button>
+    <button class="nav-item" onclick="showTab('ai')">
+      <span class="icon">🤖</span> AI Assistant
+    </button>
+  </nav>
+  <div class="sidebar-footer">
+    Powered by Gemini AI
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <div class="topbar">
+    <h1 id="page-title">Command Center</h1>
+    <div class="topbar-right">
+      <div class="date-chip" id="date-chip"></div>
+      <button class="btn btn-primary" onclick="openAddTask()">+ New Task</button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- API KEY SETUP -->
+    <div class="api-banner" id="api-banner">
+      🔑 <div style="flex:1">
+        <div style="font-weight:600;color:var(--text);margin-bottom:6px;">Enter your Gemini API Key to enable AI features</div>
+        <div class="api-input-row">
+          <input class="form-input" id="api-key-input" type="password" placeholder="AIza..." />
+          <button class="btn btn-primary" onclick="saveApiKey()">Save</button>
+          <a href="https://aistudio.google.com/apikey" target="_blank" class="btn btn-ghost" style="text-decoration:none;font-size:12px;">Get Key →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div class="tab active" id="tab-dashboard">
+      <div class="stats-grid">
+        <div class="stat-card stat-blue">
+          <div class="label">Active Tasks</div>
+          <div class="value" id="stat-active">0</div>
+          <div class="sub" style="color:var(--text2)">in progress</div>
+        </div>
+        <div class="stat-card stat-green">
+          <div class="label">Completed Today</div>
+          <div class="value" id="stat-done">0</div>
+          <div class="sub" style="color:var(--success)">great work!</div>
+        </div>
+        <div class="stat-card stat-red">
+          <div class="label">Overdue</div>
+          <div class="value" id="stat-overdue">0</div>
+          <div class="sub" style="color:var(--danger)">needs attention</div>
+        </div>
+        <div class="stat-card stat-orange">
+          <div class="label">Due This Week</div>
+          <div class="value" id="stat-week">0</div>
+          <div class="sub" style="color:var(--warning)">plan ahead</div>
+        </div>
+      </div>
+
+      <div class="dashboard-grid">
+        <div class="card">
+          <div class="card-title">⚡ Priority Tasks</div>
+          <div id="dashboard-tasks"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">🤖 AI Recommendations</div>
+          <div id="dashboard-recs">
+            <div class="rec-item">
+              <strong>💡 Getting started</strong>
+              Add your tasks and click "Get AI Tips" in the AI Assistant tab for personalized recommendations.
+            </div>
+          </div>
+          <button class="btn btn-ghost" style="width:100%;margin-top:10px;font-size:12px;" onclick="showTab('ai');getQuickRec()">Get AI Tips →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TASKS -->
+    <div class="tab" id="tab-tasks">
+      <div style="display:flex;gap:10px;margin-bottom:16px;align-items:center;">
+        <select class="form-select" style="width:auto;" id="filter-priority" onchange="renderTasks()">
+          <option value="all">All Priorities</option>
+          <option value="high">High</option>
+          <option value="medium">Medium</option>
+          <option value="low">Low</option>
+        </select>
+        <select class="form-select" style="width:auto;" id="filter-status" onchange="renderTasks()">
+          <option value="all">All Status</option>
+          <option value="pending">Pending</option>
+          <option value="done">Completed</option>
+        </select>
+      </div>
+      <div id="task-list"></div>
+    </div>
+
+    <!-- HABITS -->
+    <div class="tab" id="tab-habits">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+        <div style="font-size:13px;color:var(--text2)">Track daily habits to build consistency</div>
+        <button class="btn btn-primary" onclick="openAddHabit()">+ Add Habit</button>
+      </div>
+      <div id="habit-list"></div>
+    </div>
+
+    <!-- TIMELINE -->
+    <div class="tab" id="tab-timeline">
+      <div id="timeline-content"></div>
+    </div>
+
+    <!-- AI ASSISTANT -->
+    <div class="tab" id="tab-ai">
+      <div class="ai-layout">
+        <div class="chat-container">
+          <div class="chat-header">
+            <div class="ai-avatar">🤖</div>
+            <div>
+              <div class="ai-status">Gemini AI Assistant</div>
+              <div class="ai-online">● Online</div>
+            </div>
+          </div>
+          <div class="chat-messages" id="chat-messages">
+            <div class="msg ai">
+              👋 Hi! I'm your AI productivity assistant powered by Gemini. I can help you prioritize tasks, build a schedule, suggest productivity tips, and more.<br><br>
+              Try: <em>"What should I focus on today?"</em> or <em>"Help me plan my week"</em>
+            </div>
+          </div>
+          <div class="chat-input-area">
+            <textarea class="chat-input" id="chat-input" rows="2" placeholder="Ask me anything about your tasks, schedule, or productivity..." onkeydown="handleChatKey(event)"></textarea>
+            <button class="btn btn-primary" onclick="sendMessage()">Send</button>
+          </div>
+        </div>
+
+        <div class="side-panel">
+          <div class="card">
+            <div class="card-title">⚡ Quick Prompts</div>
+            <div class="quick-actions">
+              <button class="quick-btn" onclick="quickPrompt('What should I focus on right now based on my tasks?')">🎯 What to focus on now?</button>
+              <button class="quick-btn" onclick="quickPrompt('Create a time-blocked schedule for my pending tasks today')">📅 Schedule my day</button>
+              <button class="quick-btn" onclick="quickPrompt('Which tasks are most critical and why?')">🔥 Prioritize my tasks</button>
+              <button class="quick-btn" onclick="quickPrompt('Give me 3 productivity tips based on my current workload')">💡 Productivity tips</button>
+              <button class="quick-btn" onclick="quickPrompt('I feel overwhelmed. How do I break down my work?')">😤 I feel overwhelmed</button>
+              <button class="quick-btn" onclick="quickPrompt('Suggest habits I should build to become more productive')">🔄 Suggest habits</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">📊 Session Stats</div>
+            <div style="font-size:12px;color:var(--text2);line-height:2;">
+              Tasks Active: <strong id="ai-stat-active" style="color:var(--text)">0</strong><br>
+              Overdue: <strong id="ai-stat-overdue" style="color:var(--danger)">0</strong><br>
+              Habits Streak: <strong id="ai-stat-streak" style="color:var(--accent3)">0 days</strong><br>
+              Completed Today: <strong id="ai-stat-done" style="color:var(--success)">0</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- ADD TASK MODAL -->
+<div class="modal-overlay" id="task-modal">
+  <div class="modal">
+    <h3>➕ Add New Task</h3>
+    <div class="form-group">
+      <label class="form-label">Task Title *</label>
+      <input class="form-input" id="new-task-title" placeholder="e.g. Submit assignment" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Due Date *</label>
+      <input class="form-input" id="new-task-date" type="datetime-local" />
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="form-group">
+        <label class="form-label">Priority</label>
+        <select class="form-select" id="new-task-priority">
+          <option value="high">🔴 High</option>
+          <option value="medium" selected>🟡 Medium</option>
+          <option value="low">🟢 Low</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Category</label>
+        <select class="form-select" id="new-task-category">
+          <option>Work</option>
+          <option>Study</option>
+          <option>Personal</option>
+          <option>Health</option>
+          <option>Finance</option>
+          <option>Other</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Notes (optional)</label>
+      <input class="form-input" id="new-task-notes" placeholder="Any extra context..." />
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('task-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="addTask()">Add Task</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD HABIT MODAL -->
+<div class="modal-overlay" id="habit-modal">
+  <div class="modal">
+    <h3>🔥 Add New Habit</h3>
+    <div class="form-group">
+      <label class="form-label">Habit Name *</label>
+      <input class="form-input" id="new-habit-name" placeholder="e.g. Read 20 minutes" />
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="form-group">
+        <label class="form-label">Icon (emoji)</label>
+        <input class="form-input" id="new-habit-icon" placeholder="📚" maxlength="2" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Color</label>
+        <select class="form-select" id="new-habit-color">
+          <option value="#6c63ff">Purple</option>
+          <option value="#43e97b">Green</option>
+          <option value="#f7971e">Orange</option>
+          <option value="#ff6584">Pink</option>
+          <option value="#2ed573">Mint</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('habit-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="addHabit()">Add Habit</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── STATE ───────────────────────────────────────────────────────────────────
+let tasks = [
+  { id: 1, title: 'Submit project report', due: new Date(Date.now() - 86400000*2).toISOString(), priority: 'high', category: 'Work', notes: '', done: false },
+  { id: 2, title: 'Pay electricity bill', due: new Date(Date.now() - 3600000*5).toISOString(), priority: 'high', category: 'Finance', notes: '', done: false },
+  { id: 3, title: 'Review study notes', due: new Date(Date.now() + 86400000*1).toISOString(), priority: 'medium', category: 'Study', notes: '', done: false },
+  { id: 4, title: 'Team meeting prep', due: new Date(Date.now() + 86400000*2).toISOString(), priority: 'medium', category: 'Work', notes: '', done: false },
+  { id: 5, title: 'Morning jog', due: new Date(Date.now() + 3600000*2).toISOString(), priority: 'low', category: 'Health', notes: '', done: true },
+  { id: 6, title: 'Client presentation slides', due: new Date(Date.now() + 86400000*5).toISOString(), priority: 'high', category: 'Work', notes: '', done: false },
+];
+
+let habits = [
+  { id: 1, name: 'Morning Meditation', icon: '🧘', color: '#6c63ff', streak: 5, history: [1,1,1,0,1,1,0], doneToday: false },
+  { id: 2, name: 'Read 20 minutes', icon: '📚', color: '#43e97b', streak: 12, history: [1,1,1,1,1,1,1], doneToday: true },
+  { id: 3, name: 'Drink 8 glasses water', icon: '💧', color: '#2ed573', streak: 3, history: [0,1,1,1,0,1,1], doneToday: false },
+  { id: 4, name: 'No social media before 10am', icon: '📵', color: '#f7971e', streak: 2, history: [1,0,1,1,0,0,1], doneToday: false },
+];
+
+let apiKey = '';
+let chatHistory = [];
+let nextTaskId = 10;
+let nextHabitId = 10;
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+window.onload = () => {
+  document.getElementById('date-chip').textContent = new Date().toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' });
+  updateStats();
+  renderDashboard();
+  renderTasks();
+  renderHabits();
+  renderTimeline();
+};
+
+// ─── NAVIGATION ───────────────────────────────────────────────────────────────
+const titles = { dashboard:'Command Center', tasks:'My Tasks', habits:'Habit Tracker', timeline:'Timeline', ai:'AI Assistant' };
+
+function showTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  document.querySelectorAll('.nav-item')[['dashboard','tasks','habits','timeline','ai'].indexOf(name)].classList.add('active');
+  document.getElementById('page-title').textContent = titles[name];
+  if (name === 'ai') updateAiStats();
+}
+
+// ─── STATS ────────────────────────────────────────────────────────────────────
+function updateStats() {
+  const now = new Date();
+  const weekEnd = new Date(now.getTime() + 7 * 86400000);
+  const active = tasks.filter(t => !t.done).length;
+  const done = tasks.filter(t => t.done).length;
+  const overdue = tasks.filter(t => !t.done && new Date(t.due) < now).length;
+  const week = tasks.filter(t => !t.done && new Date(t.due) > now && new Date(t.due) < weekEnd).length;
+
+  document.getElementById('stat-active').textContent = active;
+  document.getElementById('stat-done').textContent = done;
+  document.getElementById('stat-overdue').textContent = overdue;
+  document.getElementById('stat-week').textContent = week;
+  document.getElementById('overdue-badge').textContent = overdue;
+}
+
+function updateAiStats() {
+  const now = new Date();
+  const overdue = tasks.filter(t => !t.done && new Date(t.due) < now).length;
+  const maxStreak = Math.max(...habits.map(h => h.streak), 0);
+  document.getElementById('ai-stat-active').textContent = tasks.filter(t=>!t.done).length;
+  document.getElementById('ai-stat-overdue').textContent = overdue;
+  document.getElementById('ai-stat-streak').textContent = maxStreak + ' days';
+  document.getElementById('ai-stat-done').textContent = tasks.filter(t=>t.done).length;
+}
+
+// ─── DASHBOARD ────────────────────────────────────────────────────────────────
+function renderDashboard() {
+  updateStats();
+  const now = new Date();
+  const priority = tasks.filter(t => !t.done)
+    .sort((a,b) => {
+      const p = {high:0,medium:1,low:2};
+      if (p[a.priority] !== p[b.priority]) return p[a.priority] - p[b.priority];
+      return new Date(a.due) - new Date(b.due);
+    }).slice(0, 5);
+
+  const el = document.getElementById('dashboard-tasks');
+  if (!priority.length) {
+    el.innerHTML = `<div class="empty"><div class="empty-icon">🎉</div><p>All caught up! No pending tasks.</p></div>`;
+    return;
+  }
+  el.innerHTML = priority.map(t => taskHTML(t, true)).join('');
+}
+
+// ─── TASKS ────────────────────────────────────────────────────────────────────
+function renderTasks() {
+  const pf = document.getElementById('filter-priority').value;
+  const sf = document.getElementById('filter-status').value;
+  let filtered = tasks;
+  if (pf !== 'all') filtered = filtered.filter(t => t.priority === pf);
+  if (sf === 'pending') filtered = filtered.filter(t => !t.done);
+  if (sf === 'done') filtered = filtered.filter(t => t.done);
+
+  const sorted = filtered.sort((a,b) => {
+    if (a.done !== b.done) return a.done ? 1 : -1;
+    const p = {high:0,medium:1,low:2};
+    return p[a.priority] - p[b.priority];
+  });
+
+  const el = document.getElementById('task-list');
+  if (!sorted.length) {
+    el.innerHTML = `<div class="empty"><div class="empty-icon">📭</div><p>No tasks found. Add one!</p></div>`;
+    return;
+  }
+  el.innerHTML = sorted.map(t => taskHTML(t, false)).join('');
+}
+
+function taskHTML(t, compact) {
+  const now = new Date();
+  const due = new Date(t.due);
+  const isOverdue = !t.done && due < now;
+  const dueStr = formatDue(due);
+  const priorityTag = `<span class="tag tag-${t.priority === 'high' ? 'high' : t.priority === 'medium' ? 'med' : 'low'}">${t.priority}</span>`;
+  const overdueTag = isOverdue ? `<span class="tag tag-overdue">Overdue</span>` : '';
+  return `
+    <div class="task-item" id="task-${t.id}">
+      <div class="priority-dot dot-${t.priority === 'high' ? 'high' : t.priority === 'medium' ? 'med' : 'low'}"></div>
+      <div class="task-check ${t.done ? 'done' : ''}" onclick="toggleTask(${t.id})"></div>
+      <div class="task-info">
+        <div class="task-title ${t.done ? 'done' : ''}">${t.title}</div>
+        <div class="task-meta">
+          ${priorityTag}
+          ${overdueTag}
+          <span class="tag" style="background:var(--surface3);color:var(--text2)">${t.category}</span>
+          <span class="task-due ${isOverdue ? 'overdue' : ''}">${dueStr}</span>
+        </div>
+      </div>
+      ${!compact ? `<div class="task-actions">
+        <button class="icon-btn" onclick="deleteTask(${t.id})" title="Delete">🗑</button>
+      </div>` : ''}
+    </div>`;
+}
+
+function formatDue(date) {
+  const now = new Date();
+  const diff = date - now;
+  if (diff < 0) {
+    const h = Math.abs(Math.floor(diff/3600000));
+    if (h < 24) return `${h}h overdue`;
+    return `${Math.floor(h/24)}d overdue`;
+  }
+  if (diff < 3600000) return `in ${Math.floor(diff/60000)}m`;
+  if (diff < 86400000) return `in ${Math.floor(diff/3600000)}h`;
+  return `${date.toLocaleDateString('en-US',{month:'short',day:'numeric'})}`;
+}
+
+function toggleTask(id) {
+  const t = tasks.find(t => t.id === id);
+  if (t) { t.done = !t.done; updateStats(); renderDashboard(); renderTasks(); renderTimeline(); }
+}
+
+function deleteTask(id) {
+  tasks = tasks.filter(t => t.id !== id);
+  updateStats(); renderDashboard(); renderTasks(); renderTimeline();
+}
+
+function openAddTask() {
+  document.getElementById('new-task-date').value = new Date(Date.now() + 86400000).toISOString().slice(0,16);
+  document.getElementById('task-modal').classList.add('open');
+}
+
+function addTask() {
+  const title = document.getElementById('new-task-title').value.trim();
+  const date = document.getElementById('new-task-date').value;
+  if (!title || !date) { alert('Please fill in title and due date.'); return; }
+  tasks.push({
+    id: nextTaskId++,
+    title,
+    due: new Date(date).toISOString(),
+    priority: document.getElementById('new-task-priority').value,
+    category: document.getElementById('new-task-category').value,
+    notes: document.getElementById('new-task-notes').value,
+    done: false
+  });
+  document.getElementById('new-task-title').value = '';
+  document.getElementById('new-task-notes').value = '';
+  closeModal('task-modal');
+  updateStats(); renderDashboard(); renderTasks(); renderTimeline();
+}
+
+// ─── HABITS ───────────────────────────────────────────────────────────────────
+function renderHabits() {
+  const el = document.getElementById('habit-list');
+  if (!habits.length) {
+    el.innerHTML = `<div class="empty"><div class="empty-icon">🌱</div><p>Add your first habit to start tracking!</p></div>`;
+    return;
+  }
+  el.innerHTML = habits.map(h => `
+    <div class="habit-item">
+      <div class="habit-icon" style="background:${h.color}22">${h.icon}</div>
+      <div class="habit-info">
+        <div class="habit-name">${h.name}</div>
+        <div class="habit-streak">🔥 ${h.streak} day streak</div>
+        <div class="streak-bar">
+          ${h.history.map((d,i) => `<div class="streak-day ${i===6?'today':''} ${d?'done':''}" title="Day ${i+1}"></div>`).join('')}
+        </div>
+      </div>
+      <button class="habit-check-btn ${h.doneToday?'checked':'pending'}" onclick="checkHabit(${h.id})">
+        ${h.doneToday ? '✓ Done' : 'Mark Done'}
+      </button>
+    </div>
+  `).join('');
+}
+
+function checkHabit(id) {
+  const h = habits.find(h => h.id === id);
+  if (!h || h.doneToday) return;
+  h.doneToday = true;
+  h.streak += 1;
+  h.history[6] = 1;
+  renderHabits();
+}
+
+function openAddHabit() {
+  document.getElementById('habit-modal').classList.add('open');
+}
+
+function addHabit() {
+  const name = document.getElementById('new-habit-name').value.trim();
+  const icon = document.getElementById('new-habit-icon').value || '⭐';
+  const color = document.getElementById('new-habit-color').value;
+  if (!name) { alert('Please enter a habit name.'); return; }
+  habits.push({ id: nextHabitId++, name, icon, color, streak: 0, history: [0,0,0,0,0,0,0], doneToday: false });
+  document.getElementById('new-habit-name').value = '';
+  document.getElementById('new-habit-icon').value = '';
+  closeModal('habit-modal');
+  renderHabits();
+}
+
+// ─── TIMELINE ─────────────────────────────────────────────────────────────────
+function renderTimeline() {
+  const now = new Date();
+  const overdue = tasks.filter(t => !t.done && new Date(t.due) < now).sort((a,b) => new Date(a.due)-new Date(b.due));
+  const today = tasks.filter(t => !t.done && isToday(new Date(t.due))).sort((a,b)=>new Date(a.due)-new Date(b.due));
+  const upcoming = tasks.filter(t => !t.done && new Date(t.due) > now && !isToday(new Date(t.due))).sort((a,b)=>new Date(a.due)-new Date(b.due));
+  const done = tasks.filter(t => t.done).slice(0,3);
+
+  const section = (label, items, cls) => !items.length ? '' : `
+    <div class="timeline-section">
+      <div class="timeline-label">${label}</div>
+      ${items.map(t => `
+        <div class="timeline-item ${cls}">
+          <div class="timeline-time">${formatDue(new Date(t.due))}</div>
+          <div class="timeline-content">
+            <div class="timeline-title">${t.title}</div>
+            <div class="timeline-sub">${t.category} · ${t.priority} priority</div>
+          </div>
+          <button class="btn btn-success" style="font-size:11px;padding:5px 10px;" onclick="toggleTask(${t.id})">Done ✓</button>
+        </div>`).join('')}
+    </div>`;
+
+  document.getElementById('timeline-content').innerHTML =
+    section('🔴 Overdue — Act Now', overdue, 'overdue') +
+    section('📍 Today', today, 'today') +
+    section('📅 Upcoming', upcoming, 'upcoming') +
+    section('✅ Recently Completed', done, 'upcoming') ||
+    `<div class="empty"><div class="empty-icon">🎯</div><p>No tasks yet. Add some to see your timeline!</p></div>`;
+}
+
+function isToday(date) {
+  const now = new Date();
+  return date.getDate() === now.getDate() && date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
+}
+
+// ─── AI CHAT ──────────────────────────────────────────────────────────────────
+function saveApiKey() {
+  const key = document.getElementById('api-key-input').value.trim();
+  if (!key.startsWith('AIza')) { alert('Please enter a valid Gemini API key (starts with AIza...)'); return; }
+  apiKey = key;
+  document.getElementById('api-banner').style.display = 'none';
+  addMessage('ai', '✅ API key saved! I\'m ready to help you. What would you like to do first?');
+}
+
+function buildContext() {
+  const now = new Date();
+  const pending = tasks.filter(t=>!t.done);
+  const overdue = pending.filter(t=>new Date(t.due)<now);
+  return `You are a smart AI productivity assistant. The user's current task data:
+PENDING TASKS (${pending.length}): ${pending.map(t=>`"${t.title}" [${t.priority} priority, due: ${new Date(t.due).toLocaleDateString()}, ${new Date(t.due)<now?'OVERDUE':'upcoming'}, category: ${t.category}]`).join('; ')}
+OVERDUE (${overdue.length}): ${overdue.map(t=>t.title).join(', ')||'none'}
+HABITS: ${habits.map(h=>`${h.name} (${h.streak} day streak, done today: ${h.doneToday})`).join('; ')}
+Today's date: ${now.toDateString()}
+Be concise, practical, and actionable. Use bullet points when helpful. Focus on helping the user take real action.`;
+}
+
+async function sendMessage() {
+  if (!apiKey) { addMessage('ai', '⚠️ Please enter your Gemini API key first (see the purple banner at the top).'); return; }
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  addMessage('user', text);
+  chatHistory.push({ role: 'user', parts: [{ text }] });
+  const loadingId = addMessage('ai', '⏳ Thinking...', true);
+
+  try {
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        system_instruction: { parts: [{ text: buildContext() }] },
+        contents: chatHistory,
+        generationConfig: { temperature: 0.7, maxOutputTokens: 600 }
+      })
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error.message);
+    const reply = data.candidates[0].content.parts[0].text;
+    chatHistory.push({ role: 'model', parts: [{ text: reply }] });
+    updateMessage(loadingId, reply);
+  } catch(e) {
+    updateMessage(loadingId, `❌ Error: ${e.message}. Check your API key and try again.`);
+  }
+}
+
+function quickPrompt(text) {
+  document.getElementById('chat-input').value = text;
+  sendMessage();
+}
+
+function getQuickRec() {
+  showTab('ai');
+  setTimeout(() => quickPrompt('Give me 3 quick recommendations based on my current tasks and habits'), 100);
+}
+
+function handleChatKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+}
+
+function addMessage(role, text, isLoading=false) {
+  const el = document.getElementById('chat-messages');
+  const id = 'msg-' + Date.now();
+  const div = document.createElement('div');
+  div.className = `msg ${role}${isLoading?' loading':''}`;
+  div.id = id;
+  div.innerHTML = text.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\*(.*?)\*/g,'<em>$1</em>');
+  el.appendChild(div);
+  el.scrollTop = el.scrollHeight;
+  return id;
+}
+
+function updateMessage(id, text) {
+  const el = document.getElementById(id);
+  if (el) {
+    el.className = 'msg ai';
+    el.innerHTML = text.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\*(.*?)\*/g,'<em>$1</em>');
+    el.closest('.chat-messages').scrollTop = el.closest('.chat-messages').scrollHeight;
+  }
+}
+
+// ─── UTILS ────────────────────────────────────────────────────────────────────
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(m => m.addEventListener('click', e => { if(e.target===m) m.classList.remove('open'); }));
+</script>
+</body>
+</html>
